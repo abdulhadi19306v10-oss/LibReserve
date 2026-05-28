@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibReserve - Authenticate</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="auth-wrapper">
+
+    <div class="glass-container auth-card">
+        <div class="auth-logo">
+            <i class="fa-solid fa-book-bookmark"></i>
+            <span>LibReserve</span>
+        </div>
+
+        <div class="auth-tabs">
+            <div class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Sign In</div>
+            <div class="auth-tab" id="tab-register" onclick="switchAuthTab('register')">Sign Up</div>
+        </div>
+
+        <!-- LOGIN FORM -->
+        <form id="form-login-view" onsubmit="handleLogin(event)">
+            <div id="login-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <div class="form-group">
+                <label for="login-email">University Email</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-envelope" style="position: absolute; left: 1rem; top: 1rem; color: var(--text-muted);"></i>
+                    <input type="email" id="login-email" class="form-control" placeholder="name@uet.edu.pk" style="padding-left: 2.75rem;" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="login-password">Password</label>
+                <div style="position: relative;">
+                    <i class="fa-solid fa-lock" style="position: absolute; left: 1rem; top: 1rem; color: var(--text-muted);"></i>
+                    <input type="password" id="login-password" class="form-control" placeholder="••••••••" style="padding-left: 2.75rem;" required>
+                </div>
+            </div>
+
+            <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem;">
+                <label style="display: flex; align-items: center; gap: 0.5rem; text-transform: none; font-size: 0.9rem; cursor: pointer; color: var(--text-primary);">
+                    <input type="checkbox" id="login-remember" style="accent-color: var(--primary);">
+                    Remember Me
+                </label>
+                <a href="#" onclick="forgotPassword(event)" style="font-size: 0.9rem;">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+                <span>Sign In</span>
+                <i class="fa-solid fa-arrow-right-to-bracket"></i>
+            </button>
+        </form>
+
+        <!-- REGISTRATION FORM -->
+        <form id="form-register-view" onsubmit="handleRegister(event)" style="display: none;">
+            <div id="register-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            <div id="register-success" class="badge badge-success" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <div style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="reg-first-name">First Name</label>
+                    <input type="text" id="reg-first-name" class="form-control" placeholder="Abdul" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label for="reg-last-name">Last Name</label>
+                    <input type="text" id="reg-last-name" class="form-control" placeholder="Hadi" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reg-email">University Email</label>
+                <input type="email" id="reg-email" class="form-control" placeholder="name@uet.edu.pk" required>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <div class="form-group" style="flex: 1.2;">
+                    <label for="reg-role">Role</label>
+                    <select id="reg-role" class="form-control" onchange="adjustIdLabel(this.value)" required>
+                        <option value="Student">Student</option>
+                        <option value="Faculty">Faculty / Teacher</option>
+                        <option value="Librarian">Librarian</option>
+                        <option value="Library Admin">Library Admin</option>
+                        <option value="System Admin">System Admin</option>
+                    </select>
+                </div>
+                <div class="form-group" style="flex: 1.8;">
+                    <label for="reg-id" id="lbl-reg-id">Student ID</label>
+                    <input type="text" id="reg-id" class="form-control" placeholder="2025(s)-SE-5" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reg-password">Password</label>
+                <input type="password" id="reg-password" class="form-control" placeholder="Create password" required>
+            </div>
+
+            <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
+                <span>Create Account</span>
+                <i class="fa-solid fa-user-plus"></i>
+            </button>
+        </form>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script>
+        // Check session: if already logged in, redirect to correct dashboard
+        const sessionUser = localStorage.getItem("user");
+        if (sessionUser) {
+            const user = JSON.parse(sessionUser);
+            window.location.href = getDashboardUrl(user.role);
+        }
+        
+        function switchAuthTab(tab) {
+            const tabLogin = document.getElementById('tab-login');
+            const tabRegister = document.getElementById('tab-register');
+            const viewLogin = document.getElementById('form-login-view');
+            const viewRegister = document.getElementById('form-register-view');
+            
+            if (tab === 'login') {
+                tabLogin.classList.add('active');
+                tabRegister.classList.remove('active');
+                viewLogin.style.display = 'block';
+                viewRegister.style.display = 'none';
+            } else {
+                tabLogin.classList.remove('active');
+                tabRegister.classList.add('active');
+                viewLogin.style.display = 'none';
+                viewRegister.style.display = 'block';
+            }
+        }
+        
+        function adjustIdLabel(role) {
+            const lbl = document.getElementById('lbl-reg-id');
+            const input = document.getElementById('reg-id');
+            if (role === 'Student') {
+                lbl.textContent = 'Student ID';
+                input.placeholder = '2025(s)-SE-5';
+            } else if (role === 'Faculty') {
+                lbl.textContent = 'Faculty ID';
+                input.placeholder = 'FAC-101';
+            } else if (role === 'Librarian') {
+                lbl.textContent = 'Librarian ID';
+                input.placeholder = 'LIB-201';
+            } else if (role === 'Library Admin') {
+                lbl.textContent = 'Library Admin ID';
+                input.placeholder = 'LADM-301';
+            } else if (role === 'System Admin') {
+                lbl.textContent = 'System Admin ID';
+                input.placeholder = 'SADM-401';
+            }
+        }
+
+        function forgotPassword(e) {
+            e.preventDefault();
+            alert("A password reset link has been dispatched to your registered university email address.");
+        }
+    </script>
+</body>
+</html>

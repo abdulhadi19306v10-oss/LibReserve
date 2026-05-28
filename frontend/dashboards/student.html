@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibReserve - Student Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>LibReserve</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active"><a href="#" onclick="switchTab('dashboard')"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('catalog')"><i class="fa-solid fa-magnifying-glass"></i><span>Book Catalog</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('reservations')"><i class="fa-solid fa-clock-rotate-left"></i><span>My Holds</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('fines')"><i class="fa-solid fa-receipt"></i><span>Fines & Bills</span></a></li>
+            </ul>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <span class="user-name" id="profile-name">Student Name</span>
+                    <span class="user-role" id="profile-id">2025(s)-SE-5</span>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-panel">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-msg">
+                    <h1>Student Portal</h1>
+                    <p>Welcome back, <span id="welcome-user">Student</span>!</p>
+                </div>
+                <div id="alert-zone"></div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="section-dashboard" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Total Borrowed</h3>
+                            <div class="metric-value" id="stat-borrowed">0</div>
+                        </div>
+                        <div class="metric-icon primary">
+                            <i class="fa-solid fa-book-reader"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Overdue Books</h3>
+                            <div class="metric-value" id="stat-overdue">0</div>
+                        </div>
+                        <div class="metric-icon danger">
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Outstanding Fines</h3>
+                            <div class="metric-value" id="stat-fines">Rs. 0</div>
+                        </div>
+                        <div class="metric-icon warning">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Active Reservations</h3>
+                            <div class="metric-value" id="stat-holds">0</div>
+                        </div>
+                        <div class="metric-icon success">
+                            <i class="fa-solid fa-calendar-check"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Column Layout -->
+                <div class="dashboard-sections">
+                    <!-- Left: Active Loans -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>My Active Loans (T2)</h2>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                               <thead>
+                                   <tr>
+                                       <th>Book Title</th>
+                                       <th>Due Date</th>
+                                       <th>Status</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="loans-table-body">
+                                   <tr>
+                                       <td colspan="3" style="text-align: center; color: var(--text-muted);">No current active loans.</td>
+                                   </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Recommended Books (T7) -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>Recommended (T7)</h2>
+                        </div>
+                        <div class="quick-action-list" id="recommendations-list">
+                            <!-- Populated dynamically based on Course Reserves -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOOK CATALOG SECTION -->
+            <div id="section-catalog" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Library Catalog</h2>
+                    </div>
+                    <div class="catalog-search-bar">
+                        <input type="text" id="catalog-search" class="form-control" placeholder="Search by title, author, or ISBN..." oninput="fetchCatalog()">
+                        <select id="catalog-filter" class="form-control" onchange="fetchCatalog()">
+                            <option value="">All Categories</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Literature">Literature</option>
+                        </select>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Language</th>
+                                    <th>Availability</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalog-table-body">
+                                <!-- Dynamic Catalog list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MY HOLDS SECTION -->
+            <div id="section-reservations" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>My Reservation Requests (Holds)</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>Request Date</th>
+                                    <th>Expected Pickup</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reservations-table-body">
+                                <!-- Dynamic Reservations -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FINES & BILLS SECTION -->
+            <div id="section-fines" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Fines & Billing History</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Bill ID</th>
+                                    <th>Book Title</th>
+                                    <th>Overdue Fine</th>
+                                    <th>Status</th>
+                                    <th>Payment Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="fines-table-body">
+                                <!-- Dynamic Fines -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- BOOK RESERVATION MODAL -->
+    <div class="modal-overlay" id="reserve-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeReserveModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-calendar-days" style="color:var(--primary); margin-right:0.5rem;"></i>Schedule Book Reservation</h3>
+            <div id="modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Book: <strong id="modal-book-title" style="color:var(--text-primary);">Clean Code</strong>
+            </p>
+            
+            <form onsubmit="submitReservation(event)">
+                <input type="hidden" id="modal-book-isbn">
+                <div class="form-group">
+                    <label for="pickup-date">Specify Pickup Date</label>
+                    <input type="date" id="pickup-date" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Confirm Reservation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/dashboards.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = checkUserSession("Student");
+            initStudentDashboard(user);
+        });
+    </script>
+</body>
+</html>

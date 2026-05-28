@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibReserve - Librarian Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>LibReserve</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active"><a href="#" onclick="switchTab('dashboard')"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('catalog')"><i class="fa-solid fa-book"></i><span>Manage Catalog</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('transactions')"><i class="fa-solid fa-list-check"></i><span>Transactions Log</span></a></li>
+            </ul>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <span class="user-name" id="profile-name">Librarian Name</span>
+                    <span class="user-role" id="profile-id">LIB-201</span>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-panel">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-msg">
+                    <h1>Librarian Desk</h1>
+                    <p>Welcome back, Officer <span id="welcome-user">Librarian</span>!</p>
+                </div>
+                <div id="alert-zone"></div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="section-dashboard" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Pending Reservations</h3>
+                            <div class="metric-value" id="stat-pending-holds">0</div>
+                        </div>
+                        <div class="metric-icon warning">
+                            <i class="fa-solid fa-clock"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Issued Today (T7)</h3>
+                            <div class="metric-value" id="stat-issued-today">0</div>
+                        </div>
+                        <div class="metric-icon primary">
+                            <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Returned Today (T7)</h3>
+                            <div class="metric-value" id="stat-returned-today">0</div>
+                        </div>
+                        <div class="metric-icon success">
+                            <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Column Layout -->
+                <div class="dashboard-sections">
+                    <!-- Left: Pending Reservation Requests & Transactions -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <!-- Pending Holds (T2) -->
+                        <div class="glass-container section-card">
+                            <div class="section-header">
+                                <h2>Pending Approvals (T2)</h2>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                   <thead>
+                                       <tr>
+                                           <th>Patron Name</th>
+                                           <th>Book Title</th>
+                                           <th>Expected Pickup</th>
+                                           <th>Action</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody id="approvals-table-body">
+                                       <tr>
+                                           <td colspan="4" style="text-align: center; color: var(--text-muted);">No pending approvals.</td>
+                                       </tr>
+                                   </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Recent Transactions (T8) -->
+                        <div class="glass-container section-card">
+                            <div class="section-header">
+                                <h2>Recent System Transactions (T8)</h2>
+                            </div>
+                            <div class="table-wrapper">
+                                <table>
+                                   <thead>
+                                       <tr>
+                                           <th>Transaction ID</th>
+                                           <th>Type</th>
+                                           <th>Patron Name</th>
+                                           <th>Book Title</th>
+                                           <th>Status</th>
+                                       </tr>
+                                   </thead>
+                                   <tbody id="recent-transactions-table-body">
+                                       <!-- Loaded dynamically from API -->
+                                   </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Daily Log (T1) & Actions (T3, T4, T5) -->
+                    <div style="display: flex; flex-direction: column; gap: 2rem;">
+                        <!-- Quick Actions -->
+                        <div class="glass-container section-card">
+                            <div class="section-header">
+                                <h2>Desk Operations</h2>
+                            </div>
+                            <div class="quick-action-list">
+                                <button class="btn btn-primary" onclick="openIssueModal()" style="width: 100%; text-align: left; justify-content: flex-start;">
+                                    <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                                    <span>Book Issuance (T3)</span>
+                                </button>
+                                <button class="btn btn-secondary" onclick="openReturnModal()" style="width: 100%; text-align: left; justify-content: flex-start;">
+                                    <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                                    <span>Book Return (T4)</span>
+                                </button>
+                                <button class="btn btn-outline" onclick="window.location.href='/login'" style="width: 100%; text-align: left; justify-content: flex-start;">
+                                    <i class="fa-solid fa-user-plus"></i>
+                                    <span>Patron Registration (T5)</span>
+                                </button>
+                                <button class="btn btn-outline" onclick="openAddBookModal()" style="width: 100%; text-align: left; justify-content: flex-start; border-color:var(--primary); color:var(--primary);">
+                                    <i class="fa-solid fa-plus-circle"></i>
+                                    <span>Add Catalog Book</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Daily Log (T1) -->
+                        <div class="glass-container section-card" style="flex-grow: 1;">
+                            <div class="section-header">
+                                <h2>Daily Activity Feed (T1)</h2>
+                            </div>
+                            <div class="quick-action-list" id="daily-activity-feed" style="max-height: 250px; overflow-y: auto;">
+                                <!-- Live system action logs -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MANAGE CATALOG SECTION -->
+            <div id="section-catalog" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Catalog Records</h2>
+                        <button class="btn btn-primary" onclick="openAddBookModal()"><i class="fa-solid fa-plus-circle"></i>Add Book</button>
+                    </div>
+                    <div class="catalog-search-bar">
+                        <input type="text" id="catalog-search" class="form-control" placeholder="Search by title, author, or ISBN..." oninput="fetchCatalog()">
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Total Copies</th>
+                                    <th>Available Copies</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalog-table-body">
+                                <!-- Catalog list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TRANSACTIONS SECTION -->
+            <div id="section-transactions" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Audit Circulation History</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Loan ID</th>
+                                    <th>User ID</th>
+                                    <th>Book ISBN</th>
+                                    <th>Issue Date</th>
+                                    <th>Due Date</th>
+                                    <th>Return Date</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="transactions-table-body">
+                                <!-- Loans list -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- BOOK ISSUANCE MODAL -->
+    <div class="modal-overlay" id="issue-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeIssueModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-arrow-up-from-bracket" style="color:var(--primary); margin-right:0.5rem;"></i>Process Book Issuance</h3>
+            <div id="issue-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <form onsubmit="submitIssue(event)">
+                <div class="form-group">
+                    <label for="issue-reservation-id">Approved Reservation ID</label>
+                    <input type="number" id="issue-reservation-id" class="form-control" placeholder="e.g. 5" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Confirm & Issue Book
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- BOOK RETURN MODAL -->
+    <div class="modal-overlay" id="return-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeReturnModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-arrow-down-to-bracket" style="color:var(--secondary); margin-right:0.5rem;"></i>Process Book Return</h3>
+            <div id="return-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <form onsubmit="submitReturn(event)">
+                <div class="form-group">
+                    <label for="return-isbn">Book ISBN</label>
+                    <input type="text" id="return-isbn" class="form-control" placeholder="978-0131103627" required>
+                </div>
+                <div class="form-group">
+                    <label for="return-user-id">Patron User ID</label>
+                    <input type="text" id="return-user-id" class="form-control" placeholder="2025(s)-SE-5" required>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Check In & Calculate Fines
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ADD BOOK MODAL -->
+    <div class="modal-overlay" id="add-book-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeAddBookModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-book-medical" style="color:var(--primary); margin-right:0.5rem;"></i>Add Catalog Record</h3>
+            <div id="add-book-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <form onsubmit="submitAddBook(event)">
+                <div class="form-group">
+                    <label for="ab-isbn">ISBN Code</label>
+                    <input type="text" id="ab-isbn" class="form-control" placeholder="978-xxxxxxxxx" required>
+                </div>
+                <div class="form-group">
+                    <label for="ab-title">Book Title</label>
+                    <input type="text" id="ab-title" class="form-control" placeholder="The Art of Software Testing" required>
+                </div>
+                <div class="form-group">
+                    <label for="ab-author">Author Name</label>
+                    <input type="text" id="ab-author" class="form-control" placeholder="Glenford J. Myers" required>
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <div class="form-group" style="flex:1;">
+                        <label for="ab-category">Category</label>
+                        <select id="ab-category" class="form-control" required>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Literature">Literature</option>
+                        </select>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label for="ab-language">Language</label>
+                        <input type="text" id="ab-language" class="form-control" placeholder="English" required>
+                    </div>
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <div class="form-group" style="flex:1;">
+                        <label for="ab-year">Year</label>
+                        <input type="number" id="ab-year" class="form-control" placeholder="2012" required>
+                    </div>
+                    <div class="form-group" style="flex:1;">
+                        <label for="ab-qty">Quantity</label>
+                        <input type="number" id="ab-qty" class="form-control" placeholder="3" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Insert Record
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- REJECTION REASON MODAL -->
+    <div class="modal-overlay" id="reject-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeRejectModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-circle-xmark" style="color:var(--danger); margin-right:0.5rem;"></i>Specify Rejection Reason</h3>
+            
+            <form onsubmit="submitRejectAction(event)">
+                <input type="hidden" id="reject-reservation-id">
+                <div class="form-group">
+                    <label for="reject-reason">Reason</label>
+                    <input type="text" id="reject-reason" class="form-control" placeholder="e.g. Patron has overdue books." required>
+                </div>
+                <button type="submit" class="btn btn-danger" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Confirm Rejection
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/dashboards.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = checkUserSession("Librarian");
+            initLibrarianDashboard(user);
+        });
+    </script>
+</body>
+</html>

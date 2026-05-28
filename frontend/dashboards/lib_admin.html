@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibReserve - Library Admin Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>LibReserve</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active"><a href="#" onclick="switchTab('dashboard')"><i class="fa-solid fa-chart-pie"></i><span>Analytics Dashboard</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('users')"><i class="fa-solid fa-users-gear"></i><span>User Accounts</span></a></li>
+            </ul>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <span class="user-name" id="profile-name">Library Admin</span>
+                    <span class="user-role" id="profile-id">LADM-301</span>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-panel">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-msg">
+                    <h1>Library Administration</h1>
+                    <p>Welcome back, Administrator <span id="welcome-user">Admin</span>!</p>
+                </div>
+                <div id="alert-zone"></div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="section-dashboard" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Branches (T1)</h3>
+                            <div class="metric-value" id="stat-branches">4</div>
+                        </div>
+                        <div class="metric-icon primary">
+                            <i class="fa-solid fa-network-wired"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Registered Patrons (T2)</h3>
+                            <div class="metric-value" id="stat-patrons">0</div>
+                        </div>
+                        <div class="metric-icon info">
+                            <i class="fa-solid fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Catalog Items (T3)</h3>
+                            <div class="metric-value" id="stat-catalog">0</div>
+                        </div>
+                        <div class="metric-icon success">
+                            <i class="fa-solid fa-cubes"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Annual Revenue (T4)</h3>
+                            <div class="metric-value" id="stat-revenue">Rs. 0</div>
+                        </div>
+                        <div class="metric-icon warning">
+                            <i class="fa-solid fa-cash-register"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Column Layout -->
+                <div class="dashboard-sections">
+                    <!-- Left: Historical Circulation Data (T7) -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>Historical Circulation Analytics (T7)</h2>
+                        </div>
+                        
+                        <!-- Mini SVG chart -->
+                        <div class="circulation-chart">
+                            <svg viewBox="0 0 500 160" width="100%" height="100%" style="overflow: visible;">
+                                <!-- Grid lines -->
+                                <line x1="40" y1="20" x2="480" y2="20" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+                                <line x1="40" y1="60" x2="480" y2="60" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+                                <line x1="40" y1="100" x2="480" y2="100" stroke="rgba(255,255,255,0.05)" stroke-width="1"></line>
+                                <line x1="40" y1="140" x2="480" y2="140" stroke="rgba(255,255,255,0.1)" stroke-width="1.5"></line>
+                                
+                                <!-- Chart Legends -->
+                                <text x="5" y="25" fill="var(--text-muted)" font-size="9">250</text>
+                                <text x="5" y="65" fill="var(--text-muted)" font-size="9">150</text>
+                                <text x="5" y="105" fill="var(--text-muted)" font-size="9">50</text>
+                                
+                                <!-- Issues Polyline (Indigo) -->
+                                <polyline points="60,110 160,95 260,80 360,65 460,40" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"></polyline>
+                                <!-- Returns Polyline (Teal) -->
+                                <polyline points="60,120 160,112 260,90 360,75 460,50" fill="none" stroke="var(--secondary)" stroke-width="3" stroke-linecap="round"></polyline>
+                                
+                                <!-- Points circles -->
+                                <circle cx="60" cy="110" r="4" fill="var(--primary)"></circle>
+                                <circle cx="160" cy="95" r="4" fill="var(--primary)"></circle>
+                                <circle cx="260" cy="80" r="4" fill="var(--primary)"></circle>
+                                <circle cx="360" cy="65" r="4" fill="var(--primary)"></circle>
+                                <circle cx="460" cy="40" r="4" fill="var(--primary)"></circle>
+
+                                <circle cx="60" cy="120" r="4" fill="var(--secondary)"></circle>
+                                <circle cx="160" cy="112" r="4" fill="var(--secondary)"></circle>
+                                <circle cx="260" cy="90" r="4" fill="var(--secondary)"></circle>
+                                <circle cx="360" cy="75" r="4" fill="var(--secondary)"></circle>
+                                <circle cx="460" cy="50" r="4" fill="var(--secondary)"></circle>
+                                
+                                <!-- Month Labels -->
+                                <text x="50" y="155" fill="var(--text-muted)" font-size="9">Jan</text>
+                                <text x="150" y="155" fill="var(--text-muted)" font-size="9">Feb</text>
+                                <text x="250" y="155" fill="var(--text-muted)" font-size="9">Mar</text>
+                                <text x="350" y="155" fill="var(--text-muted)" font-size="9">Apr</text>
+                                <text x="450" y="155" fill="var(--text-muted)" font-size="9">May</text>
+                            </svg>
+                        </div>
+                        
+                        <div style="display:flex; justify-content:center; gap: 2rem; margin-top: 1rem; font-size: 0.85rem;">
+                            <span style="display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-circle" style="color:var(--primary);"></i> Issues</span>
+                            <span style="display:flex; align-items:center; gap:0.5rem;"><i class="fa-solid fa-circle" style="color:var(--secondary);"></i> Returns</span>
+                        </div>
+                        
+                        <div class="table-wrapper" style="margin-top: 1.5rem;">
+                            <table>
+                               <thead>
+                                   <tr>
+                                       <th>Curriculum Month</th>
+                                       <th>Total Books Issued</th>
+                                       <th>Total Books Returned</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="circulation-table-body">
+                                   <!-- Circulation data rows -->
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Manage Branches List (T5) -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>Managed Branches (T5)</h2>
+                        </div>
+                        <div class="quick-action-list" id="branches-list-body">
+                            <!-- Populated dynamic branches list -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USER ACCOUNTS SECTION -->
+            <div id="section-users" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Patron Account Settings</h2>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Patron ID</th>
+                                    <th>Full Name</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Account Status</th>
+                                    <th>Administrative Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users list with Block/Unblock toggle -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/dashboards.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = checkUserSession("Library Admin");
+            initLibAdminDashboard(user);
+        });
+    </script>
+</body>
+</html>

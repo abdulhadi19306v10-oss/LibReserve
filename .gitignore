@@ -1,0 +1,25 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Database
+backend/*.db
+backend/*.bak
+*.db
+*.bak
+
+# Virtual environment
+venv/
+.venv/
+env/
+.env/
+
+# IDE / Editor configurations
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?

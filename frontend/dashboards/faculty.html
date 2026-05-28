@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LibReserve - Faculty Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="dashboard-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <i class="fa-solid fa-book-bookmark"></i>
+                <span>LibReserve</span>
+            </div>
+            <ul class="sidebar-menu">
+                <li class="menu-item active"><a href="#" onclick="switchTab('dashboard')"><i class="fa-solid fa-gauge"></i><span>Dashboard</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('catalog')"><i class="fa-solid fa-magnifying-glass"></i><span>Book Catalog</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('reserves')"><i class="fa-solid fa-graduation-cap"></i><span>Course Reserves</span></a></li>
+                <li class="menu-item"><a href="#" onclick="switchTab('requests')"><i class="fa-solid fa-clipboard-question"></i><span>Purchase Requests</span></a></li>
+            </ul>
+            <div class="sidebar-user">
+                <div class="user-info">
+                    <span class="user-name" id="profile-name">Faculty Name</span>
+                    <span class="user-role" id="profile-id">FAC-101</span>
+                </div>
+                <button class="btn-logout" onclick="logout()" title="Sign Out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-panel">
+            <!-- Header -->
+            <header class="dashboard-header">
+                <div class="welcome-msg">
+                    <h1>Faculty Portal</h1>
+                    <p>Welcome back, Professor <span id="welcome-user">Faculty</span>!</p>
+                </div>
+                <div id="alert-zone"></div>
+            </header>
+
+            <!-- DASHBOARD SECTION -->
+            <div id="section-dashboard" class="tab-content">
+                <!-- Metrics Grid -->
+                <div class="metrics-grid">
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Total Borrowed</h3>
+                            <div class="metric-value" id="stat-borrowed">0</div>
+                        </div>
+                        <div class="metric-icon primary">
+                            <i class="fa-solid fa-book-reader"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Course Reserves</h3>
+                            <div class="metric-value" id="stat-reserves">0</div>
+                        </div>
+                        <div class="metric-icon success">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Purchase Requests</h3>
+                            <div class="metric-value" id="stat-requests">0</div>
+                        </div>
+                        <div class="metric-icon info">
+                            <i class="fa-solid fa-clipboard-question"></i>
+                        </div>
+                    </div>
+                    <div class="glass-container metric-card">
+                        <div class="metric-content">
+                            <h3>Overdue Copies</h3>
+                            <div class="metric-value" id="stat-overdue">0</div>
+                        </div>
+                        <div class="metric-icon danger">
+                            <i class="fa-solid fa-bell"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Two-Column Layout -->
+                <div class="dashboard-sections">
+                    <!-- Left: Active Loans -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>My Active Loans & Actions (T2)</h2>
+                        </div>
+                        <div class="table-wrapper">
+                            <table>
+                               <thead>
+                                   <tr>
+                                       <th>Book Title</th>
+                                       <th>Due Date</th>
+                                       <th>Status</th>
+                                       <th>Action Option</th>
+                                   </tr>
+                               </thead>
+                               <tbody id="loans-table-body">
+                                   <tr>
+                                       <td colspan="4" style="text-align: center; color: var(--text-muted);">No current active loans.</td>
+                                   </tr>
+                               </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Right: Quick Functions (T3) -->
+                    <div class="glass-container section-card">
+                        <div class="section-header">
+                            <h2>Quick Actions (T3)</h2>
+                        </div>
+                        <div class="quick-action-list">
+                            <div class="quick-action-item" onclick="switchTab('catalog')" style="cursor: pointer;">
+                                <div class="quick-action-info">
+                                    <h4>Reserve Library Book</h4>
+                                    <p>Browse catalog and reserve research books.</p>
+                                </div>
+                                <i class="fa-solid fa-calendar-plus" style="color:var(--primary); font-size:1.25rem;"></i>
+                            </div>
+                            
+                            <div class="quick-action-item" onclick="openCourseReserveModal()" style="cursor: pointer;">
+                                <div class="quick-action-info">
+                                    <h4>Add Course Reserve</h4>
+                                    <p>Designate books for student course curriculum.</p>
+                                </div>
+                                <i class="fa-solid fa-plus-circle" style="color:var(--secondary); font-size:1.25rem;"></i>
+                            </div>
+
+                            <div class="quick-action-item" onclick="openPurchaseRequestModal()" style="cursor: pointer;">
+                                <div class="quick-action-info">
+                                    <h4>Request Book Purchase</h4>
+                                    <p>Submit procurement recommendation for UET Library.</p>
+                                </div>
+                                <i class="fa-solid fa-file-invoice" style="color:var(--info); font-size:1.25rem;"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOOK CATALOG SECTION -->
+            <div id="section-catalog" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Library Catalog</h2>
+                    </div>
+                    <div class="catalog-search-bar">
+                        <input type="text" id="catalog-search" class="form-control" placeholder="Search title, author, or ISBN..." oninput="fetchCatalog()">
+                        <select id="catalog-filter" class="form-control" onchange="fetchCatalog()">
+                            <option value="">All Categories</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Mathematics">Mathematics</option>
+                            <option value="Physics">Physics</option>
+                            <option value="Literature">Literature</option>
+                        </select>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ISBN</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Category</th>
+                                    <th>Language</th>
+                                    <th>Availability</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="catalog-table-body">
+                                <!-- Catalog dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- COURSE RESERVES SECTION -->
+            <div id="section-reserves" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Designated Course Reserves (T4)</h2>
+                        <button class="btn btn-primary" onclick="openCourseReserveModal()">Add New Course Reserve</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Book Title</th>
+                                    <th>ISBN</th>
+                                    <th>Course Curriculum Name</th>
+                                    <th>Requested By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="reserves-table-body">
+                                <!-- Dynamic Course Reserves -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PURCHASE REQUESTS SECTION -->
+            <div id="section-requests" class="tab-content" style="display: none;">
+                <div class="glass-container section-card">
+                    <div class="section-header">
+                        <h2>Book Purchase Requests (T7)</h2>
+                        <button class="btn btn-secondary" onclick="openPurchaseRequestModal()">Submit New Request</button>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Request ID</th>
+                                    <th>Book Title</th>
+                                    <th>Author Name</th>
+                                    <th>Procurement Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="requests-table-body">
+                                <!-- Dynamic Requests -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- BOOK RESERVATION MODAL -->
+    <div class="modal-overlay" id="reserve-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeReserveModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-calendar-days" style="color:var(--primary); margin-right:0.5rem;"></i>Schedule Book Reservation</h3>
+            <div id="reserve-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <p style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 1.5rem;">
+                Book: <strong id="modal-book-title" style="color:var(--text-primary);">Clean Code</strong>
+            </p>
+            
+            <form onsubmit="submitReservation(event)">
+                <input type="hidden" id="modal-book-isbn">
+                <div class="form-group">
+                    <label for="pickup-date">Specify Pickup Date</label>
+                    <input type="date" id="pickup-date" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Confirm Reservation
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- COURSE RESERVE MODAL -->
+    <div class="modal-overlay" id="course-reserve-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closeCourseReserveModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-graduation-cap" style="color:var(--secondary); margin-right:0.5rem;"></i>Designate Course Reserve</h3>
+            <div id="cr-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <form onsubmit="submitCourseReserve(event)">
+                <div class="form-group">
+                    <label for="cr-book-select">Select Catalog Book</label>
+                    <select id="cr-book-select" class="form-control" required>
+                        <!-- Populated dynamic list of CS/Engineering books -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="cr-course-name">Course Name & Code</label>
+                    <input type="text" id="cr-course-name" class="form-control" placeholder="CS-302: Software Engineering" required>
+                </div>
+                <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
+                    Designate Book
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- PURCHASE REQUEST MODAL -->
+    <div class="modal-overlay" id="purchase-request-modal">
+        <div class="glass-container modal-content">
+            <button class="modal-close" onclick="closePurchaseRequestModal()">&times;</button>
+            <h3 style="margin-bottom: 1.5rem;"><i class="fa-solid fa-file-invoice" style="color:var(--info); margin-right:0.5rem;"></i>Submit Book Purchase Request</h3>
+            <div id="pr-modal-error" class="badge badge-danger" style="display:none; width:100%; margin-bottom:1rem; padding:0.75rem; border-radius:12px;"></div>
+            
+            <form onsubmit="submitPurchaseRequest(event)">
+                <div class="form-group">
+                    <label for="pr-book-title">Proposed Book Title</label>
+                    <input type="text" id="pr-book-title" class="form-control" placeholder="Introduction to Algorithms" required>
+                </div>
+                <div class="form-group">
+                    <label for="pr-book-author">Author(s)</label>
+                    <input type="text" id="pr-book-author" class="form-control" placeholder="Thomas H. Cormen" required>
+                </div>
+                <button type="submit" class="btn btn-info" style="width: 100%; margin-top: 1rem; padding: 0.90rem; color:white;">
+                    Submit Proposal
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+    <script src="/js/dashboards.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const user = checkUserSession("Faculty");
+            initFacultyDashboard(user);
+        });
+    </script>
+</body>
+</html>
