@@ -27,6 +27,52 @@
     --shadow-soft: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
     --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.15);
     --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Theme Dependent Variables */
+    --bg-sidebar: rgba(10, 12, 22, 0.9);
+    --bg-input: rgba(255, 255, 255, 0.03);
+    --bg-input-focus: rgba(255, 255, 255, 0.06);
+    --bg-quick-action: rgba(255, 255, 255, 0.02);
+    --bg-scrollbar-thumb: rgba(255, 255, 255, 0.1);
+    --bg-tr-hover: rgba(255, 255, 255, 0.01);
+    --bg-modal-overlay: rgba(9, 10, 15, 0.8);
+    --menu-active-color: #ffffff;
+    --menu-active-bg: rgba(99, 102, 241, 0.15);
+    --bg-btn-outline-hover: rgba(255, 255, 255, 0.05);
+}
+
+/* Light Theme Variables Override */
+body.light-theme {
+    --bg-dark: #f3f4f6;
+    --bg-card: rgba(255, 255, 255, 0.65);
+    --bg-card-hover: rgba(255, 255, 255, 0.85);
+    --border-color: rgba(0, 0, 0, 0.08);
+    --border-glow: rgba(99, 102, 241, 0.15);
+    
+    --text-primary: #1f2937;
+    --text-muted: #6b7280;
+    
+    --shadow-soft: 0 8px 32px 0 rgba(31, 38, 135, 0.06);
+    --shadow-glow: 0 0 15px rgba(99, 102, 241, 0.1);
+    
+    --bg-sidebar: rgba(255, 255, 255, 0.9);
+    --bg-input: rgba(0, 0, 0, 0.03);
+    --bg-input-focus: rgba(0, 0, 0, 0.05);
+    --bg-quick-action: rgba(0, 0, 0, 0.02);
+    --bg-scrollbar-thumb: rgba(0, 0, 0, 0.15);
+    --bg-tr-hover: rgba(0, 0, 0, 0.015);
+    --bg-modal-overlay: rgba(15, 23, 42, 0.4);
+    --menu-active-color: var(--primary);
+    --menu-active-bg: rgba(99, 102, 241, 0.08);
+    --bg-btn-outline-hover: rgba(0, 0, 0, 0.03);
+}
+
+body.light-theme {
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(at 0% 0%, rgba(99, 102, 241, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(16, 185, 129, 0.04) 0px, transparent 50%),
+        radial-gradient(at 50% 50%, rgba(6, 182, 212, 0.04) 0px, transparent 50%);
 }
 
 /* Base Styles */
@@ -139,7 +185,7 @@ a:hover {
 }
 
 .btn-outline:hover {
-    background: rgba(255, 255, 255, 0.05);
+    background: var(--bg-btn-outline-hover);
     border-color: var(--text-primary);
     transform: translateY(-2px);
 }
@@ -167,7 +213,7 @@ a:hover {
 .form-control {
     width: 100%;
     padding: 0.85rem 1.25rem;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-input);
     border: 1px solid var(--border-color);
     border-radius: 12px;
     color: var(--text-primary);
@@ -177,7 +223,7 @@ a:hover {
 }
 
 .form-control:focus {
-    background: rgba(255, 255, 255, 0.06);
+    background: var(--bg-input-focus);
     border-color: var(--primary);
     box-shadow: 0 0 10px var(--primary-glow);
 }
@@ -253,7 +299,7 @@ select.form-control {
 /* Sidebar */
 .sidebar {
     width: 280px;
-    background: rgba(10, 12, 22, 0.9);
+    background: var(--bg-sidebar);
     border-right: 1px solid var(--border-color);
     display: flex;
     flex-direction: column;
@@ -304,8 +350,8 @@ select.form-control {
 }
 
 .menu-item.active a, .menu-item a:hover {
-    color: #fff;
-    background: rgba(99, 102, 241, 0.15);
+    color: var(--menu-active-color);
+    background: var(--menu-active-bg);
     border-left: 3px solid var(--primary);
 }
 
@@ -506,7 +552,7 @@ tr:last-child td {
 }
 
 tr:hover td {
-    background: rgba(255, 255, 255, 0.01);
+    background: var(--bg-tr-hover);
 }
 
 /* Badges for status */
@@ -567,7 +613,7 @@ tr:hover td {
 }
 
 .quick-action-item {
-    background: rgba(255, 255, 255, 0.02);
+    background: var(--bg-quick-action);
     border: 1px solid var(--border-color);
     padding: 1rem;
     border-radius: 12px;
@@ -599,7 +645,7 @@ tr:hover td {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(9, 10, 15, 0.8);
+    background: var(--bg-modal-overlay);
     backdrop-filter: blur(8px);
     z-index: 1000;
     display: flex;
@@ -714,7 +760,7 @@ tr:hover td {
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.1);
+    background: var(--bg-scrollbar-thumb);
     border-radius: 99px;
 }
 

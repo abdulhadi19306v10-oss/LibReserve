@@ -8,6 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="auth-wrapper">
+    <div style="position: absolute; top: 1.5rem; right: 1.5rem; z-index: 100;">
+        <button class="btn-theme-toggle" onclick="toggleTheme()" title="Toggle Theme" style="background: var(--bg-card); border: 1px solid var(--border-color); color: var(--text-primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition); backdrop-filter: var(--glass-blur);">
+            <i class="fa-solid fa-moon"></i>
+        </button>
+    </div>
 
     <div class="glass-container auth-card">
         <div class="auth-logo">

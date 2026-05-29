@@ -1,3 +1,40 @@
+// Theme Manager
+(function() {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    if (savedTheme === "light") {
+        document.documentElement.classList.add("light-theme");
+    }
+})();
+
+document.addEventListener("DOMContentLoaded", () => {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    if (savedTheme === "light") {
+        document.body.classList.add("light-theme");
+    }
+    updateThemeIcon();
+});
+
+function toggleTheme() {
+    const body = document.body;
+    body.classList.toggle("light-theme");
+    document.documentElement.classList.toggle("light-theme");
+    
+    const theme = body.classList.contains("light-theme") ? "light" : "dark";
+    localStorage.setItem("theme", theme);
+    updateThemeIcon();
+}
+
+function updateThemeIcon() {
+    const icons = document.querySelectorAll(".btn-theme-toggle i");
+    icons.forEach(icon => {
+        if (document.body.classList.contains("light-theme")) {
+            icon.className = "fa-solid fa-sun";
+        } else {
+            icon.className = "fa-solid fa-moon";
+        }
+    });
+}
+
 // LibReserve - Global Application Client Logic
 
 const API_BASE = "/api";
