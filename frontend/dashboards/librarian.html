@@ -238,7 +238,7 @@
             <form onsubmit="submitIssue(event)">
                 <div class="form-group">
                     <label for="issue-reservation-id">Approved Reservation ID</label>
-                    <input type="number" id="issue-reservation-id" class="form-control" placeholder="e.g. 5" required>
+                    <input type="number" id="issue-reservation-id" class="form-control" placeholder="e.g. 5" min="1" title="Please enter a valid positive reservation ID" required>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
                     Confirm & Issue Book
@@ -257,11 +257,11 @@
             <form onsubmit="submitReturn(event)">
                 <div class="form-group">
                     <label for="return-isbn">Book ISBN</label>
-                    <input type="text" id="return-isbn" class="form-control" placeholder="978-0131103627" required>
+                    <input type="text" id="return-isbn" class="form-control" placeholder="978-0131103627" pattern="^(97[89]-?)?[0-9]{1,5}-?[0-9]{1,7}-?[0-9]{1,7}-?[0-9Xx]$" title="ISBN should be a valid 10 or 13-digit code (e.g. 978-0131103627)" required>
                 </div>
                 <div class="form-group">
                     <label for="return-user-id">Patron User ID</label>
-                    <input type="text" id="return-user-id" class="form-control" placeholder="2025(s)-SE-5" required>
+                    <input type="text" id="return-user-id" class="form-control" placeholder="2026-SE-10" pattern="^([0-9]{4}(\([a-zA-Z]\))?-[a-zA-Z]+-[0-9]+|FAC-[0-9]+|LIB-[0-9]+|LADM-[0-9]+|SADM-[0-9]+)$" title="Enter a valid Patron User ID (e.g., 2026-SE-10 or FAC-101)" required>
                 </div>
                 <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
                     Check In & Calculate Fines
@@ -280,15 +280,15 @@
             <form onsubmit="submitAddBook(event)">
                 <div class="form-group">
                     <label for="ab-isbn">ISBN Code</label>
-                    <input type="text" id="ab-isbn" class="form-control" placeholder="978-xxxxxxxxx" required>
+                    <input type="text" id="ab-isbn" class="form-control" placeholder="978-xxxxxxxxx" pattern="^(97[89]-?)?[0-9]{1,5}-?[0-9]{1,7}-?[0-9]{1,7}-?[0-9Xx]$" title="ISBN should be a valid 10 or 13-digit code (e.g. 978-0131103627)" required>
                 </div>
                 <div class="form-group">
                     <label for="ab-title">Book Title</label>
-                    <input type="text" id="ab-title" class="form-control" placeholder="The Art of Software Testing" required>
+                    <input type="text" id="ab-title" class="form-control" placeholder="The Art of Software Testing" minlength="2" pattern=".*\S.*" title="Please enter a valid book title (minimum 2 characters)" required>
                 </div>
                 <div class="form-group">
                     <label for="ab-author">Author Name</label>
-                    <input type="text" id="ab-author" class="form-control" placeholder="Glenford J. Myers" required>
+                    <input type="text" id="ab-author" class="form-control" placeholder="Glenford J. Myers" minlength="2" pattern=".*\S.*" title="Please enter a valid author name (minimum 2 characters)" required>
                 </div>
                 <div style="display:flex; gap:1rem;">
                     <div class="form-group" style="flex:1;">
@@ -302,17 +302,17 @@
                     </div>
                     <div class="form-group" style="flex:1;">
                         <label for="ab-language">Language</label>
-                        <input type="text" id="ab-language" class="form-control" placeholder="English" required>
+                        <input type="text" id="ab-language" class="form-control" placeholder="English" pattern="^[a-zA-Z\s\-']+$" title="Language should contain letters only (e.g. English)" required>
                     </div>
                 </div>
                 <div style="display:flex; gap:1rem;">
                     <div class="form-group" style="flex:1;">
                         <label for="ab-year">Year</label>
-                        <input type="number" id="ab-year" class="form-control" placeholder="2012" required>
+                        <input type="number" id="ab-year" class="form-control" placeholder="2012" min="1000" max="2099" title="Please enter a valid 4-digit publication year (e.g. 2012)" required>
                     </div>
                     <div class="form-group" style="flex:1;">
                         <label for="ab-qty">Quantity</label>
-                        <input type="number" id="ab-qty" class="form-control" placeholder="3" required>
+                        <input type="number" id="ab-qty" class="form-control" placeholder="3" min="1" title="Quantity must be at least 1 copy" required>
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
@@ -332,7 +332,7 @@
                 <input type="hidden" id="reject-reservation-id">
                 <div class="form-group">
                     <label for="reject-reason">Reason</label>
-                    <input type="text" id="reject-reason" class="form-control" placeholder="e.g. Patron has overdue books." required>
+                    <input type="text" id="reject-reason" class="form-control" placeholder="e.g. Patron has overdue books." minlength="4" pattern=".*\S.*" title="Please provide a valid reason (minimum 4 characters)" required>
                 </div>
                 <button type="submit" class="btn btn-danger" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
                     Confirm Rejection

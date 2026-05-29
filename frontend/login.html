@@ -28,7 +28,7 @@
                 <label for="login-email">University Email</label>
                 <div style="position: relative;">
                     <i class="fa-solid fa-envelope" style="position: absolute; left: 1rem; top: 1rem; color: var(--text-muted);"></i>
-                    <input type="email" id="login-email" class="form-control" placeholder="name@uet.edu.pk" style="padding-left: 2.75rem;" required>
+                    <input type="email" id="login-email" class="form-control" placeholder="name@uet.edu.pk" style="padding-left: 2.75rem;" pattern=".+@uet\.edu\.pk" title="Please enter your UET university email (e.g. name@uet.edu.pk)" required>
                 </div>
             </div>
 
@@ -62,17 +62,17 @@
             <div style="display: flex; gap: 1rem;">
                 <div class="form-group" style="flex: 1;">
                     <label for="reg-first-name">First Name</label>
-                    <input type="text" id="reg-first-name" class="form-control" placeholder="Abdul" required>
+                    <input type="text" id="reg-first-name" class="form-control" placeholder="John" minlength="2" maxlength="50" pattern="^[a-zA-Z\s\-']+$" title="First name should only contain letters, spaces, hyphens, or apostrophes (e.g. John)" required>
                 </div>
                 <div class="form-group" style="flex: 1;">
                     <label for="reg-last-name">Last Name</label>
-                    <input type="text" id="reg-last-name" class="form-control" placeholder="Hadi" required>
+                    <input type="text" id="reg-last-name" class="form-control" placeholder="Doe" minlength="2" maxlength="50" pattern="^[a-zA-Z\s\-']+$" title="Last name should only contain letters, spaces, hyphens, or apostrophes (e.g. Doe)" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="reg-email">University Email</label>
-                <input type="email" id="reg-email" class="form-control" placeholder="name@uet.edu.pk" required>
+                <input type="email" id="reg-email" class="form-control" placeholder="name@uet.edu.pk" pattern=".+@uet\.edu\.pk" title="Please enter your UET university email (e.g. name@uet.edu.pk)" required>
             </div>
 
             <div style="display: flex; gap: 1rem;">
@@ -88,13 +88,13 @@
                 </div>
                 <div class="form-group" style="flex: 1.8;">
                     <label for="reg-id" id="lbl-reg-id">Student ID</label>
-                    <input type="text" id="reg-id" class="form-control" placeholder="2025(s)-SE-5" required>
+                    <input type="text" id="reg-id" class="form-control" placeholder="2026-SE-10" pattern="^[0-9]{4}(\([a-zA-Z]\))?-[a-zA-Z]+-[0-9]+$" title="Student ID should match the format: 2026-SE-10 or 2025(s)-SE-5" required>
                 </div>
             </div>
 
             <div class="form-group">
                 <label for="reg-password">Password</label>
-                <input type="password" id="reg-password" class="form-control" placeholder="Create password" required>
+                <input type="password" id="reg-password" class="form-control" placeholder="Create password" minlength="6" title="Password must be at least 6 characters long" required>
             </div>
 
             <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.9rem;">
@@ -137,19 +137,29 @@
             const input = document.getElementById('reg-id');
             if (role === 'Student') {
                 lbl.textContent = 'Student ID';
-                input.placeholder = '2025(s)-SE-5';
+                input.placeholder = '2026-SE-10';
+                input.pattern = '^[0-9]{4}(\\([a-zA-Z]\\))?-[a-zA-Z]+-[0-9]+$';
+                input.title = 'Student ID should match the format: 2026-SE-10 or 2025(s)-SE-5';
             } else if (role === 'Faculty') {
                 lbl.textContent = 'Faculty ID';
                 input.placeholder = 'FAC-101';
+                input.pattern = '^FAC-[0-9]+$';
+                input.title = 'Faculty ID should match the format: FAC-101';
             } else if (role === 'Librarian') {
                 lbl.textContent = 'Librarian ID';
                 input.placeholder = 'LIB-201';
+                input.pattern = '^LIB-[0-9]+$';
+                input.title = 'Librarian ID should match the format: LIB-201';
             } else if (role === 'Library Admin') {
                 lbl.textContent = 'Library Admin ID';
                 input.placeholder = 'LADM-301';
+                input.pattern = '^LADM-[0-9]+$';
+                input.title = 'Library Admin ID should match the format: LADM-301';
             } else if (role === 'System Admin') {
                 lbl.textContent = 'System Admin ID';
                 input.placeholder = 'SADM-401';
+                input.pattern = '^SADM-[0-9]+$';
+                input.title = 'System Admin ID should match the format: SADM-401';
             }
         }
 

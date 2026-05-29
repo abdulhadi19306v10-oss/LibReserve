@@ -275,7 +275,7 @@
                 </div>
                 <div class="form-group">
                     <label for="cr-course-name">Course Name & Code</label>
-                    <input type="text" id="cr-course-name" class="form-control" placeholder="CS-302: Software Engineering" required>
+                    <input type="text" id="cr-course-name" class="form-control" placeholder="CS-302: Software Engineering" minlength="3" pattern=".*\S.*" title="Please enter a valid course name and code (minimum 3 characters)" required>
                 </div>
                 <button type="submit" class="btn btn-secondary" style="width: 100%; margin-top: 1rem; padding: 0.90rem;">
                     Designate Book
@@ -294,11 +294,11 @@
             <form onsubmit="submitPurchaseRequest(event)">
                 <div class="form-group">
                     <label for="pr-book-title">Proposed Book Title</label>
-                    <input type="text" id="pr-book-title" class="form-control" placeholder="Introduction to Algorithms" required>
+                    <input type="text" id="pr-book-title" class="form-control" placeholder="Introduction to Algorithms" minlength="2" pattern=".*\S.*" title="Please enter a valid book title (minimum 2 characters)" required>
                 </div>
                 <div class="form-group">
                     <label for="pr-book-author">Author(s)</label>
-                    <input type="text" id="pr-book-author" class="form-control" placeholder="Thomas H. Cormen" required>
+                    <input type="text" id="pr-book-author" class="form-control" placeholder="Thomas H. Cormen" minlength="2" pattern=".*\S.*" title="Please enter a valid author name (minimum 2 characters)" required>
                 </div>
                 <button type="submit" class="btn btn-info" style="width: 100%; margin-top: 1rem; padding: 0.90rem; color:white;">
                     Submit Proposal
